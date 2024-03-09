@@ -1,0 +1,54 @@
+diff --git a/scripts/preprocess_dataset.py b/scripts/preprocess_dataset.py
+index b2532fb..4ea3e9c 100644
+--- a/scripts/preprocess_dataset.py
++++ b/scripts/preprocess_dataset.py
+@@ -2,6 +2,8 @@ from argparse import ArgumentParser
+ from pathlib import Path
+ 
+ from llm_jp_eval.datasets import (
++    AbcMultipleChoiceDatasetProcessor,
++    AbcMultipleChoiceNumberlessDatasetProcessor,
+     ChabsaDatasetProcessor,
+     JAMPDatasetProcessor,
+     JaNLIDatasetProcessor,
+@@ -22,6 +24,8 @@ from llm_jp_eval.datasets import (
+ )
+ 
+ DATA_NAME_TO_PROCESSOR = {
++    "abc_multiple_choice": AbcMultipleChoiceDatasetProcessor,
++    "abc_multiple_choice_numberless": AbcMultipleChoiceNumberlessDatasetProcessor,
+     "jamp": JAMPDatasetProcessor,
+     "janli": JaNLIDatasetProcessor,
+     "jcommonsenseqa": JCommonsenseQADatasetProcessor,
+diff --git a/src/llm_jp_eval/datasets/__init__.py b/src/llm_jp_eval/datasets/__init__.py
+index 2dc83d4..0f09bbc 100644
+--- a/src/llm_jp_eval/datasets/__init__.py
++++ b/src/llm_jp_eval/datasets/__init__.py
+@@ -1,3 +1,5 @@
++from .abc_multiple_choice import AbcMultipleChoiceDatasetProcessor
++from .abc_multiple_choice_numberless import AbcMultipleChoiceNumberlessDatasetProcessor
+ from .chabsa import ChabsaDatasetProcessor
+ from .jamp import JAMPDatasetProcessor
+ from .janli import JaNLIDatasetProcessor
+@@ -21,6 +23,8 @@ from .wiki import (
+ )
+ 
+ __all__ = [
++    "AbcMultipleChoiceDatasetProcessor",
++    "AbcMultipleChoiceNumberlessDatasetProcessor",
+     "ChabsaDatasetProcessor",
+     "JAMPDatasetProcessor",
+     "JaNLIDatasetProcessor",
+diff --git a/src/llm_jp_eval/evaluator.py b/src/llm_jp_eval/evaluator.py
+index e263eea..fd56dc1 100644
+--- a/src/llm_jp_eval/evaluator.py
++++ b/src/llm_jp_eval/evaluator.py
+@@ -102,6 +102,8 @@ def evaluate(cfg: DictConfig) -> tuple[dict[str, str], dict[str, list[dict[str,
+ 
+     if cfg.target_dataset == "all":
+         target_datasets: list[str] = [
++            "abc_multiple_choice",
++            "abc_multiple_choice_numberless",
+             "jamp",
+             "janli",
+             "jcommonsenseqa",

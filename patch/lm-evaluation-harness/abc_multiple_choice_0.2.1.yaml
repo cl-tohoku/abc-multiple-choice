@@ -1,0 +1,23 @@
+group:
+  - abc_multiple_choice
+task: abc_multiple_choice_0.2.1
+dataset_path: tohoku-nlp/abc-multiple-choice
+dataset_name: null
+output_type: multiple_choice
+training_split: train
+validation_split: null
+test_split: test
+fewshot_config:
+  sampler: first_n
+description: "与えられた選択肢の中から、最適な答えを選んでください。\n\n"
+doc_to_text: "質問：{{question}}\n選択肢：\n- {{choice_1}}\n- {{choice_2}}\n- {{choice_3}}\n- {{choice_4}}\n回答："
+doc_to_target: "{{answer - 1}}"
+doc_to_choice: "{{[choice_1, choice_2, choice_3, choice_4]}}"
+target_delimiter: ""
+metric_list:
+  - metric: acc
+    aggregation: mean
+    higher_is_better: true
+  - metric: acc_norm
+    aggregation: mean
+    higher_is_better: true
